@@ -41,6 +41,11 @@ class AdminDatatsetView(generics.ListAPIView):
     queryset = Datasets.objects.filter(is_deleted=False).order_by('-created_at')
     pagination_class = LimitOffsetPagination
 
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 
     def list(self, request, *args, **kwargs):
@@ -102,6 +107,12 @@ class AdminDatasetFiles(generics.ListAPIView):
     queryset = DatasetFiles.objects.filter(is_deleted=False).order_by('-created_at')
 
 
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
     def get_queryset(self):
         pk = self.kwargs['pk']
 
@@ -125,6 +136,13 @@ class AdminOrganisationView(generics.ListAPIView):
     search_fields = ['name', 'status', 'slug']
     queryset = Organisations.objects.filter(is_deleted=False).order_by('-created_at')
     pagination_class = LimitOffsetPagination
+
+
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 
     def list(self, request, *args, **kwargs):
@@ -409,6 +427,12 @@ class AdminOrganisationDetailView(generics.RetrieveUpdateAPIView):
     serializer_class = OrganisationSerializer
     queryset = Organisations.objects.filter(is_deleted=False).order_by('-created_at')
     lookup_field = 'pk'
+
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
 
 class AdminListNewsView(generics.ListAPIView):
@@ -421,6 +445,12 @@ class AdminListNewsView(generics.ListAPIView):
     search_fields = ['title']
     queryset = News.objects.filter(is_deleted=False).order_by('-created_at')
 
+
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 
     def list(self, request, *args, **kwargs):
@@ -457,6 +487,12 @@ class NewsDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = NewsSerializer
     queryset = News.objects.filter(is_deleted=False).order_by('-created_at')
     lookup_field = 'pk'
+
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
 
 
@@ -519,6 +555,12 @@ class AdminOrganisation_Requests(generics.ListAPIView):
     serializer_class = OrganisationRequestSerializer
     queryset = OrganisationRequests.objects.filter(is_deleted=False, status='pending').order_by('-created_at')
     pagination_class = LimitOffsetPagination
+
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
     def list(self, request, *args, **kwargs):
         pk = request.GET.get('pk', None)
@@ -594,6 +636,12 @@ class AdminCategories(generics.ListAPIView):
     queryset = Categories.objects.filter(is_deleted=False).order_by('-created_at')
     pagination_class = LimitOffsetPagination
 
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
 
 
 
@@ -609,6 +657,12 @@ class AdminUsers(generics.ListAPIView):
     search_fields = ['email', 'first_name', 'last_name']
     pagination_class = LimitOffsetPagination
     queryset = User.objects.filter(is_deleted=False).order_by('-date_joined')
+
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
     def list(self, request, *args, **kwargs):
 
@@ -785,6 +839,6 @@ class AdminMostPublishedOrganisation(APIView):
 
         organisation = Organisations.objects.filter(is_deleted=False, status='approved').order_by('-dataset_count')[:5]
 
-        data = OrganisationSerializer(organisation, many=True).data
+        data = OrganisationSerializer(organisation, many=True, context={'request': request}).data
 
         return Response(data, status=status.HTTP_200_OK)
