@@ -90,7 +90,7 @@ class AdminDatasetDetails(APIView):
         except Datasets.DoesNotExist:
             return Response({"error": "dataset not found"}, status=status.HTTP_404_NOT_FOUND)
         
-        serializer = DatasetSerializer(dataset)
+        serializer = DatasetSerializer(dataset, context={'request': request})
 
         return Response(serializer.data)
 
