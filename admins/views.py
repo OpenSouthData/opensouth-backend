@@ -70,10 +70,10 @@ class AdminDatatsetView(generics.ListAPIView):
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = DatasetSerializer(page, many=True)
+            serializer = DatasetSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
 
-        serializer = DatasetSerializer(queryset, many=True)
+        serializer = DatasetSerializer(queryset, many=True, context={'request': request})
 
         return Response(serializer.data)
     
@@ -178,10 +178,10 @@ class AdminOrganisationView(generics.ListAPIView):
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = OrganisationSerializer(page, many=True)
+            serializer = OrganisationSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
 
-        serializer = OrganisationSerializer(queryset, many=True)
+        serializer = OrganisationSerializer(queryset, many=True, context={'request': request})
 
         return Response(serializer.data)
 
@@ -445,7 +445,6 @@ class AdminListNewsView(generics.ListAPIView):
     search_fields = ['title']
     queryset = News.objects.filter(is_deleted=False).order_by('-created_at')
 
-
     def get_serializer_context(self):
        
         context = super().get_serializer_context()
@@ -469,10 +468,10 @@ class AdminListNewsView(generics.ListAPIView):
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = NewsSerializer(page, many=True)
+            serializer = NewsSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
 
-        serializer = NewsSerializer(queryset, many=True)
+        serializer = NewsSerializer(queryset, many=True, context={'request': request})
 
         return Response(serializer.data)
 
