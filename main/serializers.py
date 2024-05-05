@@ -47,7 +47,6 @@ class OrganisationSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
 
         representation['description'] = TranslationMiddleware.translate_text(text=representation['description'], target_language=lang)
-        representation['status'] = TranslationMiddleware.translate_text(text=representation['status'], target_language=lang)
 
         return representation
 
@@ -86,7 +85,6 @@ class DatasetSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
 
         representation['description'] = TranslationMiddleware.translate_text(text=representation['description'], target_language=lang)
-        representation['status'] = TranslationMiddleware.translate_text(text=representation['status'], target_language=lang)
         representation['title'] = TranslationMiddleware.translate_text(text=representation['title'], target_language=lang)
         representation['update_frequency'] = TranslationMiddleware.translate_text(text=representation['update_frequency'], target_language=lang)
         representation['license'] = TranslationMiddleware.translate_text(text=representation['license'], target_language=lang)
