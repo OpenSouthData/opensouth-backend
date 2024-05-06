@@ -3,7 +3,7 @@ import os
 from public.models import ClientIP
 from django.http import JsonResponse
 from django.http import HttpResponse
-
+from rest_framework.exceptions import ValidationError
 import json
 
 class TranslationMiddleware:
@@ -85,5 +85,4 @@ class TranslationMiddleware:
             return translated_text
         
         except Exception as e:
-            raise 
-            return text
+            raise ValidationError("Error translating text")
