@@ -85,4 +85,10 @@ class TranslationMiddleware:
             return translated_text
         
         except Exception as e:
-            raise ValidationError(f"Error translating text: {e}")
+            data = {
+                "error": "Error translating text",
+                "text": text,
+                "target_language": target_language,
+                "error_message": str(e)
+            }
+            raise ValidationError(data)
