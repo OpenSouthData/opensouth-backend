@@ -63,7 +63,7 @@ class TranslationMiddleware:
 
         
 
-    def translate_text(text, target_language='fr'):
+    def translate_text(text, target_language):
 
         session = boto3.Session(
         region_name=os.getenv("region"),
@@ -85,5 +85,5 @@ class TranslationMiddleware:
             return translated_text
         
         except Exception as e:
-            print(f"Translation error: {e}")
+            raise 
             return text

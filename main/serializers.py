@@ -37,8 +37,7 @@ class OrganisationSerializer(serializers.ModelSerializer):
         id = request.GET.get('lang_id', None)
         if id:
             try:
-                lang = ClientIP.objects.get(id=id)
-                lang = lang.lang
+                lang = ClientIP.objects.get(id=id).lang
             except ClientIP.DoesNotExist:
                 raise serializers.ValidationError("clientIP instance not found")
         else:
@@ -75,8 +74,7 @@ class DatasetSerializer(serializers.ModelSerializer):
         id = request.GET.get('lang_id', None)
         if id:
             try:
-                lang = ClientIP.objects.get(id=id)
-                lang = lang.lang
+                lang = ClientIP.objects.get(id=id).lang
             except ClientIP.DoesNotExist:
                 raise serializers.ValidationError("clientIP instance not found")
         else:
@@ -123,8 +121,7 @@ class CategorySerializer(serializers.ModelSerializer):
         id = request.GET.get('lang_id', None)
         if id:
             try:
-                lang = ClientIP.objects.get(id=id)
-                lang = lang.lang
+                lang = ClientIP.objects.get(id=id).lang
             except ClientIP.DoesNotExist:
                 raise serializers.ValidationError("clientIP instance not found")
         else:
@@ -191,11 +188,9 @@ class NewsSerializer(serializers.ModelSerializer):
         id = request.GET.get('lang_id', None)
         if id:
             try:
-                lang = ClientIP.objects.get(id=id)
-                lang = lang.lang
+                lang = ClientIP.objects.get(id=id).lang
             except ClientIP.DoesNotExist:
                 raise serializers.ValidationError("clientIP instance not found")
-            
         else:
             lang = "en"
             

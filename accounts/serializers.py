@@ -43,12 +43,12 @@ class CustomUserSerializer(serializers.ModelSerializer):
         }
 
     def to_representation(self, instance):
+        
         request = self.context.get('request')
         id = request.GET.get('lang_id', None)
         if id:
             try:
-                lang = ClientIP.objects.get(id=id)
-                lang = lang.lang
+                lang = ClientIP.objects.get(id=id).lang
             except ClientIP.DoesNotExist:
                 raise serializers.ValidationError("clientIP instance not found")
         else:
