@@ -73,22 +73,25 @@ class TranslationMiddleware:
         )
     
         translate_client = session.client('translate')
+        if text:
     
-        try:
-            response = translate_client.translate_text(
-                Text=text,
-                SourceLanguageCode='en',
-                TargetLanguageCode=target_language
-            )
-            translated_text = response['TranslatedText']
+            try:
+                response = translate_client.translate_text(
+                    Text=text,
+                    SourceLanguageCode='en',
+                    TargetLanguageCode=target_language
+                )
+                translated_text = response['TranslatedText']
 
-            return translated_text
-        
-        except Exception as e:
-            data = {
-                "error": "Error translating text",
-                "text": text,
-                "target_language": target_language,
-                "error_message": str(e)
-            }
-            raise ValidationError(data)
+                return translated_text
+            
+            except Exception as e:
+                data = {
+                    "error": "Error translating text",
+                    "text": text,
+                    "target_language": target_language,
+                    "error_message": str(e)
+                }
+                raise ValidationError(data)
+        else:
+            return text
