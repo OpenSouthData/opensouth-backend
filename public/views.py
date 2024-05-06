@@ -55,6 +55,12 @@ class PublicCategoryDetailView(generics.RetrieveAPIView):
     lookup_field = 'slug'
     lookup_url_kwarg = 'slug'
 
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
 
 
 class PublicOrganisationView(generics.ListAPIView):
@@ -89,7 +95,7 @@ class PublicOrganisationView(generics.ListAPIView):
         page = self.paginate_queryset(queryset)
 
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            serializer = self.get_serializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True, context={'request': request})
@@ -107,6 +113,12 @@ class PublicOrganisationDetailView(generics.RetrieveAPIView):
     queryset = Organisations.objects.filter(is_deleted=False, status='approved').order_by('-created_at')
     lookup_field = 'slug'
     lookup_url_kwarg = 'slug'
+
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 
 class PublicDatasetView(generics.ListAPIView):
@@ -177,7 +189,7 @@ class PublicDatasetView(generics.ListAPIView):
         page = self.paginate_queryset(queryset)
 
         if page is not None:
-            serializer = self.get_serializer(page, many=True)
+            serializer = self.get_serializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True, context={'request': request})
@@ -245,6 +257,12 @@ class PublicNews(generics.ListAPIView):
     serializer_class = NewsSerializer
     queryset = News.objects.filter(is_deleted=False, status='published').order_by('-created_at')
     pagination_class = LimitOffsetPagination
+
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
     
 
 class PublicNewsDetailView(generics.RetrieveAPIView):
@@ -255,6 +273,12 @@ class PublicNewsDetailView(generics.RetrieveAPIView):
     lookup_field = 'slug'
     lookup_url_kwarg = 'slug'
 
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
 
 class PublicTagsView(generics.ListAPIView):
 
@@ -264,6 +288,12 @@ class PublicTagsView(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     queryset = Tags.objects.filter(is_deleted=False).order_by('name')
     search_fields = ('name', 'slug')
+
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 
 

@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from main.models import LocationAnalysis
-
+from public.models import ClientIP
 
 class Command(BaseCommand):
     help = 'db update'
@@ -8,7 +7,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
 
-        orgs = LocationAnalysis.objects.filter()
+        orgs = ClientIP.objects.filter()
 
         orgs.delete()
 
