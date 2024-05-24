@@ -28,3 +28,14 @@ class ClientIPSerializer(serializers.ModelSerializer):
         model = ClientIP
         fields = "__all__"
 
+
+class PartnersSerializer(serializers.ModelSerializer):
+
+    organisation_name = serializers.CharField(max_length=100, required=True)
+    contact_person = serializers.CharField(max_length=100, required=True)
+    email = serializers.EmailField(required=True)
+    phone = serializers.CharField(max_length=15, required=True)
+    organisation_type = serializers.CharField(max_length=100, required=True)
+    description = serializers.CharField(max_length=100, required=True)
+
+   

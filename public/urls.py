@@ -26,4 +26,5 @@ urlpatterns = [
     path('public/support/system/', PublicSupportSystem.as_view(), name="public_support_system"),
     path('public/location/analysis/<uuid:pk>/', PublicLocationRequest.as_view(), name="public_location_analysis"),
     path('public/IP/', GetClientIP.as_view(), name="public_client_ip"),
+    path('public/partners/request/', PartnersRequestView.as_view(), name="public_partners_request"),
 ]

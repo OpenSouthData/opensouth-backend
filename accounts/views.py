@@ -12,7 +12,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.contrib.auth import authenticate, logout
 from django.contrib.auth.signals import user_logged_in, user_logged_out
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView , RetrieveUpdateAPIView
+from rest_framework.generics import *
 from rest_framework.decorators import action
 from main.models import *
 from main.serializers import *

@@ -27,6 +27,7 @@ from accounts.serializers import *
 from rest_framework import viewsets
 from rest_framework.response import Response
 # Create your views here.
+from .email import partners_request_mail
 
 
 
@@ -468,6 +469,28 @@ class GetClientIP(APIView):
         }
 
         return Response(data, status=status.HTTP_200_OK)
+    
+
+
+class PartnersRequestView(APIView):
+
+    permission_classes = [PublicPermissions]
+
+    @swagger_auto_schema(methods=['POST'], request_body=PartnersSerializer())
+    @action(detail=False, methods=['POST'])
+    def post(self, request):
+
+        serializer = PartnersSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        data = serializer.validated_data
+        try:
+            partners_request_mail(data)
+        except Exception as e:
+            return Response({"error": "something went wrong"}, status=400)
+
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 
