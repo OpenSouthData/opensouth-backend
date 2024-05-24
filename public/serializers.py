@@ -29,7 +29,7 @@ class ClientIPSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class PartnersSerializer(serializers.ModelSerializer):
+class PartnersSerializer(serializers.Serializer):
 
     organisation_name = serializers.CharField(max_length=100, required=True)
     contact_person = serializers.CharField(max_length=100, required=True)
