@@ -69,6 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     lang = models.CharField(max_length=100, null=True)
     provider = models.CharField(_('provider'), max_length=255, default="email", choices=(('email',"email"),
                                                                                          ('google',"google")))
+    meta = models.JSONField(null=True)
     
     
     objects = UserManager()
