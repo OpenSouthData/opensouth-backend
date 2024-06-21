@@ -72,6 +72,9 @@ class UserToken(APIView):
             token = Token.objects.get(user=request.user, is_deleted=False, is_active=True)
             if token:
                 token.delete_token()
+
+                token = Token.objects.create(user=request.user)
+                return Response(TokenSerializer(token).data, status=status.HTTP_201_CREATED)
                 
         except Token.DoesNotExist:
             
