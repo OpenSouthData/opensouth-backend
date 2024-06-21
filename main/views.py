@@ -951,18 +951,24 @@ class AdminLocationAnalysis(APIView):
     permission_classes = [IsAdmin]
 
     def get(self, request):
+        locations = LocationAnalysis.objects.all().order_by('-count')
+        top_5 = []
+        seen_countries = set()
 
-        locations = LocationAnalysis.objects.all()
+        for location in locations:
+            if location.country not in seen_countries:
+                top_5.append(location)
+                seen_countries.add(location.country)
+            if len(top_5) == 5:
+                break
 
-        top_5 = locations.order_by('-count')[:5]
-
-
-
-        count = locations.exclude(pk__in=top_5).aggregate(count=Sum('count'))['count']
+        # Calculate the sum of counts for 'other' locations
+        remaining_locations = locations.exclude(pk__in=[loc.pk for loc in top_5])
+        others_count = remaining_locations.aggregate(count=Sum('count'))['count']
 
         data = {
             "top_locations": LocationAnalysisSerializer(top_5, many=True, context={'request': request}).data,
-            "others": count
+            "others": others_count
         }
 
         return Response(data, status=200)
