@@ -60,7 +60,8 @@ class UserToken(APIView):
             token = Token.objects.get(user=request.user, is_deleted=False, is_active=True)
             if not token:
                 return Response({}, status=200)
-            return Response(TokenSerializer(token).data, status=status.HTTP_200_OK)
+            else:
+                return Response(TokenSerializer(token).data, status=status.HTTP_200_OK)
         except Token.DoesNotExist:
             return Response({}, status=200)
         

@@ -33,7 +33,8 @@ class Token(models.Model):
 
         if not self.token:
             self.token = self.generate_tokem()
-            self.save()
+        super(Token, self).save(*args, **kwargs)
+
     
 
     def delete_token(self):
