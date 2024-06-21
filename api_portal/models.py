@@ -48,5 +48,5 @@ class Token(models.Model):
         
         parts = str(uuid.uuid4()).split('-')
 
-        return ''.join(parts).lower()[:15]
+        return ''.join(parts).lower()
 
