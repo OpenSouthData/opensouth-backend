@@ -964,11 +964,11 @@ class AdminLocationAnalysis(APIView):
 
         # Calculate the sum of counts for 'other' locations
         remaining_locations = locations.exclude(pk__in=[loc.pk for loc in top_5])
-        others_count = remaining_locations.aggregate(count=Sum('count'))['count']
+        count = remaining_locations.aggregate(count=Sum('count'))['count']
 
         data = {
             "top_locations": LocationAnalysisSerializer(top_5, many=True, context={'request': request}).data,
-            "others": others_count
+            "others": count
         }
 
         return Response(data, status=200)
