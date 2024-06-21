@@ -15,7 +15,7 @@ User = get_user_model()
 
 
 
-class TokenManager(models.Manager):
+class Token(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_token")
@@ -29,6 +29,12 @@ class TokenManager(models.Manager):
     def __str__(self):
         return self.user.email
     
+    def save(self, *args, **kwargs):
+
+        if not self.token:
+            self.token = self.generate_tokem()
+            self.save()
+    
 
     def delete_token(self):
 
@@ -36,3 +42,10 @@ class TokenManager(models.Manager):
         self.is_active = False
         self.token = f"{self.token}--deleted--{datetime.now().date()}"
         self.save()
+
+    def generate_tokem(self):
+        
+        parts = str(uuid.uuid4()).split('-')
+
+        return ''.join(parts).lower()[:15]
+

@@ -6,6 +6,7 @@ from django.forms import model_to_dict
 from django.core.exceptions import ValidationError
 import hashlib
 from django.utils.text import slugify
+from datetime import datetime
 # Create your models here.
 
 
@@ -112,7 +113,7 @@ class Organisations(models.Model):
     @property
     def users_data(self):
         list_data = []
-        users = self.users.all()
+        users = self.users.all().filter(is_deleted=False)
         for user in users:
             data = model_to_dict(user, fields=["id", "first_name", "last_name", "email", "role", "image_url"])
             data["id"] = user.id
@@ -517,5 +518,7 @@ class LocationAnalysis(models.Model):
 
     def __str__(self):
         return f"{self.country} -- count- {self.count}"
-    
+
+
+
 

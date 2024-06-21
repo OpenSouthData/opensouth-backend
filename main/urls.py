@@ -26,6 +26,7 @@ urlpatterns = [
     path('user/organisations/<uuid:pk>/datasets/', UserOrganisationDatasets.as_view(), name="user_organisation_datasets"),
     path('user/organisations/pk/<uuid:org_pk>/dataset/pk/<uuid:pk>/details/', UserOrganisationDatasetDetail.as_view(), name="user_organisation_details"),
     path('user/datasets/', UserDataset.as_view(), name="user_datasets"),
+    path('user/token/manager/', UserToken.as_view(), name="user_token_manager"),
     path('user/dataset/pk/<uuid:pk>/files/', UserDatasetFiles.as_view(), name="user_dataset_files"),
     path('user/datasets/<uuid:pk>/', UserDatasetDetailView.as_view(), name="user_datasets"),
     path('user/organisations/', UserOrganisation.as_view(), name="user_organisations"),
@@ -38,4 +39,5 @@ urlpatterns = [
     path('user/location/analysis/', views.UserLocationAnalysisView.as_view(), name="user_location_analysis"),
     path('organisation/location/analysis/<uuid:pk>/', views.OrganisationLocationAnalysis.as_view(), name="organisation_location_analysis"),
     path('admin/location/analysis/', views.AdminLocationAnalysis.as_view(), name="admin_location_analysis"),
+
 ]

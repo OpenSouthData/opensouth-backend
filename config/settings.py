@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'main.apps.MainConfig',
     'admins.apps.AdminConfig',
     'public.apps.PublicConfig',
+    'api_portal.apps.ApiPortalConfig',
     "social_auth",
     
     'rest_framework',
