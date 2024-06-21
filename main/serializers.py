@@ -7,6 +7,8 @@ from config.translate import TranslationMiddleware
 from public.models import ClientIP
 from config.translate import TranslationMiddleware
 import uuid
+
+
 User = get_user_model()
 
 
@@ -226,3 +228,6 @@ class LocationAnalysisSerializer(serializers.ModelSerializer):
     class Meta:
         model = LocationAnalysis
         fields = "__all__"
+
+
+

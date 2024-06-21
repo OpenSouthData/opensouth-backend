@@ -36,6 +36,8 @@ from accounts.serializers import CustomUserSerializer
 import requests
 import os
 from rest_framework.response import Response
+from api_portal.models import Token
+from api_portal.serializers import TokenSerializer
 
 
 # Create your views here.
@@ -46,6 +48,38 @@ from rest_framework.response import Response
 
 
 User = get_user_model()
+
+class UserToken(APIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        try:
+            token = Token.objects.get(user=request.user, is_deleted=False, is_active=True)
+            if not token:
+                return Response({}, status=200)
+            return Response(TokenSerializer(token).data, status=status.HTTP_200_OK)
+        except Token.DoesNotExist:
+            return Response({}, status=200)
+        
+
+    def post(self, request):
+
+        try:
+            token = Token.objects.get(user=request.user, is_deleted=False, is_active=True)
+            if token:
+                token.delete_token()
+                
+        except Token.DoesNotExist:
+            
+            token = Token.objects.create(user=request.user)
+            return Response(TokenSerializer(token).data, status=status.HTTP_201_CREATED)
+        
+    
+
+
 
 class CategoryView(APIView):
 
