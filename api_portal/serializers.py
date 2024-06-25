@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Token
+from .models import *
 
 
 
@@ -18,3 +18,8 @@ class TokenSerializer(serializers.ModelSerializer):
 
 
         
+class APIRequestSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = APIRequest
+        fields = '__all__'

@@ -1,3 +1,4 @@
+from typing import Any
 from django.db import models
 import uuid
 from django.contrib.auth import get_user_model
@@ -49,4 +50,30 @@ class Token(models.Model):
         parts = str(uuid.uuid4()).split('-')
 
         return ''.join(parts).lower()
+    
+
+
+
+class APIRequest(models.Model):
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    token = models.ForeignKey(Token, on_delete=models.CASCADE, related_name="token_api_request")
+    meta = models.JSONField()
+    is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+
+    def __str__(self):
+        return self.user.email
+    
+    # def save(self, *args, **kwargs):
+    #     super(APIRequest, self).save(*args, **kwargs)
+
+
+    def delete_request(self):
+
+        self.is_deleted = True
+        self.save()
 
