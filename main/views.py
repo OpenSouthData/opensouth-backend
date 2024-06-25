@@ -36,8 +36,8 @@ from accounts.serializers import CustomUserSerializer
 import requests
 import os
 from rest_framework.response import Response
-from api_portal.models import Token
-from api_portal.serializers import TokenSerializer
+from api_portal.models import Token, APIRequest
+from api_portal.serializers import TokenSerializer, APIRequestSerializer
 
 
 # Create your views here.
@@ -80,9 +80,25 @@ class UserToken(APIView):
             
             token = Token.objects.create(user=request.user)
             return Response(TokenSerializer(token).data, status=status.HTTP_201_CREATED)
-        
-    
 
+
+class UserAPIRequest(generics.ListAPIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = APIRequestSerializer
+    queryset = APIRequest.objects.all().order_by('-created_at')
+    pagination_class = LimitOffsetPagination
+
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
+    def get_queryset(self):
+        return APIRequest.objects.filter(token__user=self.request.user).order_by('-created_at')
+        
 
 
 class CategoryView(APIView):

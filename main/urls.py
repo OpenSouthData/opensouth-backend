@@ -27,6 +27,7 @@ urlpatterns = [
     path('user/organisations/pk/<uuid:org_pk>/dataset/pk/<uuid:pk>/details/', UserOrganisationDatasetDetail.as_view(), name="user_organisation_details"),
     path('user/datasets/', UserDataset.as_view(), name="user_datasets"),
     path('user/token/manager/', UserToken.as_view(), name="user_token_manager"),
+    path('user/api/request/', UserAPIRequest.as_view(), name="user_api_request"),
     path('user/dataset/pk/<uuid:pk>/files/', UserDatasetFiles.as_view(), name="user_dataset_files"),
     path('user/datasets/<uuid:pk>/', UserDatasetDetailView.as_view(), name="user_datasets"),
     path('user/organisations/', UserOrganisation.as_view(), name="user_organisations"),

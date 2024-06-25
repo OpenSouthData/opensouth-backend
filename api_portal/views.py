@@ -37,6 +37,9 @@ from accounts.serializers import CustomUserSerializer
 import requests
 import os
 from rest_framework.response import Response
+from main.serializers import *
+from main.models import *
+from .permissions import AuthHandler
 
 
 
@@ -47,11 +50,23 @@ from rest_framework.response import Response
 
 
 
+class APIDatasetView(generics.ListAPIView):
+
+    serializer_class = DatasetSerializer
+    queryset = Datasets.objects.filter(is_deleted=False, status='published').order_by('-created_at')
+    pagination_class = LimitOffsetPagination
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ['title', 'category__name', 'tags__name', 'organisation__name']
 
 
+    def list(self, request, *args, **kwargs):
 
+        user = AuthHandler(request)
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = DatasetSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
 
-class TokenCreateVew(APIView):
-
-    def post(self, request):
-        pass
+        serializer = DatasetSerializer(queryset, many=True)
+        return Response(serializer.data)
