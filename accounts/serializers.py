@@ -5,7 +5,7 @@ from djoser.signals import user_activated
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
-from config.translate import TranslationMiddleware
+from config.custom_middleware import TranslationMiddleware
 from .emails import *
 from public.models import ClientIP
 from .models import ActivationOtp

@@ -95,3 +95,15 @@ class TranslationMiddleware:
                 raise ValidationError(data)
         else:
             return text
+
+
+class SecuredHostMiddleware:
+
+    def host(request):
+
+        host = request.META.get('HTTP_HOST')
+
+        if str(host) != os.getenv("api_host"):
+            raise ValidationError("Invalid host")
+
+

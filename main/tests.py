@@ -1,6 +1,6 @@
 import unittest
 from django.test import RequestFactory
-from config.translate import TranslationMiddleware
+from config.custom_middleware import TranslationMiddleware
 
 
 class TranslationMiddlewareTestCase(unittest.TestCase):

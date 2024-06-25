@@ -3,9 +3,8 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 # from django.utils.translation import gettext_lazy as _
 from public.models import ClientIP
-from config.translate import TranslationMiddleware
+from config.custom_middleware import TranslationMiddleware
 from public.models import ClientIP
-from config.translate import TranslationMiddleware
 import uuid
 
 

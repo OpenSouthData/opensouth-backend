@@ -7,6 +7,7 @@ from rest_framework import exceptions
 from django.contrib.auth import get_user_model
 import json
 from .models import Token, APIRequest
+from config.custom_middleware import SecuredHostMiddleware
 
 
 
@@ -83,6 +84,8 @@ class UserTablePermissions(CustomBasePermissions):
 
 
 def AuthHandler(request):
+
+    SecuredHostMiddleware.host(request)
         
     if 'Authorization' in request.headers:
 
