@@ -38,6 +38,10 @@ import os
 from rest_framework.response import Response
 from api_portal.models import Token, APIRequest
 from api_portal.serializers import TokenSerializer, APIRequestSerializer
+from django.http import StreamingHttpResponse
+from rest_framework.renderers import JSONRenderer
+
+
 
 
 # Create your views here.
@@ -82,24 +86,50 @@ class UserToken(APIView):
             return Response(TokenSerializer(token).data, status=status.HTTP_201_CREATED)
 
 
-class UserAPIRequest(generics.ListAPIView):
+# class UserAPIRequest(generics.ListAPIView):
+
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = APIRequestSerializer
+#     queryset = APIRequest.objects.all().order_by('-created_at')
+#     pagination_class = LimitOffsetPagination
+
+#     def get_serializer_context(self):
+       
+#         context = super().get_serializer_context()
+#         context['request'] = self.request
+#         return context
+
+#     def get_queryset(self):
+#         return APIRequest.objects.filter(token__user=self.request.user).order_by('-created_at')
+
+class UserAPIRequestSSEView(generics.ListAPIView):
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
-    serializer_class = APIRequestSerializer
-    queryset = APIRequest.objects.all().order_by('-created_at')
-    pagination_class = LimitOffsetPagination
 
-    def get_serializer_context(self):
-       
-        context = super().get_serializer_context()
-        context['request'] = self.request
-        return context
+    def get_queryset(self, request):
+        return APIRequest.objects.filter(token__user=request.user).order_by('-created_at')
 
-    def get_queryset(self):
-        return APIRequest.objects.filter(token__user=self.request.user).order_by('-created_at')
+    def event_stream(self, request):
+        queryset = self.get_queryset(request)
+        serializer = APIRequestSerializer(queryset, many=True)
+        data = JSONRenderer().render(serializer.data)
         
+        message = f"data: {data.decode('utf-8')}\n\n"
 
+        yield message
+
+    def sse_view(self, request):
+        response = StreamingHttpResponse(self.event_stream(request), content_type='text/event-stream')
+        response['Cache-Control'] = 'no-cache'
+        response['X-Accel-Buffering'] = 'no'  # Disable buffering for Nginx
+
+        return response
+
+    def list(self, request, *args, **kwargs):
+        return self.sse_view(request)
+        
 
 class CategoryView(APIView):
 
