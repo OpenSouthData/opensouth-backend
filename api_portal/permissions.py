@@ -85,7 +85,7 @@ class UserTablePermissions(CustomBasePermissions):
 
 def AuthHandler(request):
 
-    # SecuredHostMiddleware.host(request)
+    SecuredHostMiddleware.host(request)
         
     if 'Authorization' in request.headers:
 
