@@ -57,6 +57,7 @@ def get_query():
 
 class CustomUserViewSet(UserViewSet):
     queryset = User.objects.filter(is_deleted=False)
+    authentication_classes = [JWTAuthentication]
     
     def list(self, request, *args, **kwargs):
         queryset = self.queryset.filter(role="user")
