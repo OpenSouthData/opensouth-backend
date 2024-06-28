@@ -108,6 +108,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 APPEND_SLASH=True
 
+
+# Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 
