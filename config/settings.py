@@ -108,10 +108,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 APPEND_SLASH=True
 
-import socket
-socket.setdefaulttimeout(60*10)
-
-# Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 
