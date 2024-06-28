@@ -70,19 +70,21 @@ INSTALLED_APPS = [
 
 ]
 
+
 MIDDLEWARE = [
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    "security.middleware.SecurityMiddleware",
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     # 'config.translate.TranslationMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'config.urls'
 
@@ -106,8 +108,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 APPEND_SLASH=True
 
-# import socket
-# socket.setdefaulttimeout(60*10)
+import socket
+socket.setdefaulttimeout(60*10)
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
