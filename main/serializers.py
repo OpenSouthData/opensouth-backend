@@ -85,8 +85,9 @@ class DatasetSerializer(serializers.ModelSerializer):
             representation['license'] = TranslationMiddleware.translate_text(text=representation['license'], target_language=lang)
 
             return representation
+        
         else:
-            representation = super().to_representation(instance)
+            return super().to_representation(instance)
 
 
 
@@ -123,15 +124,16 @@ class CategorySerializer(serializers.ModelSerializer):
                 lang = ClientIP.objects.get(id=id).lang
             except ClientIP.DoesNotExist:
                 raise serializers.ValidationError("clientIP instance not found")
-        else:
-            lang = "en"
+        
             
-        representation = super().to_representation(instance)
+            representation = super().to_representation(instance)
 
-        representation['description'] = TranslationMiddleware.translate_text(text=representation['description'], target_language=lang)
-        representation['name'] = TranslationMiddleware.translate_text(text=representation['name'], target_language=lang)
+            representation['description'] = TranslationMiddleware.translate_text(text=representation['description'], target_language=lang)
+            representation['name'] = TranslationMiddleware.translate_text(text=representation['name'], target_language=lang)
 
-        return representation
+            return representation
+        else:
+            return super().to_representation(instance)
 
 
 
@@ -190,14 +192,17 @@ class NewsSerializer(serializers.ModelSerializer):
                 lang = ClientIP.objects.get(id=id).lang
             except ClientIP.DoesNotExist:
                 raise serializers.ValidationError("clientIP instance not found")
-        else:
-            lang = "en"
+
             
-        representation = super().to_representation(instance)
+            representation = super().to_representation(instance)
 
-        representation['body'] = TranslationMiddleware.translate_text(text=representation['body'], target_language=lang)
+            representation['body'] = TranslationMiddleware.translate_text(text=representation['body'], target_language=lang)
 
-        return representation
+            return representation
+        
+        else:
+            return super().to_representation(instance)
+
 
 
 
