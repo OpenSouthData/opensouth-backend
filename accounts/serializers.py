@@ -51,14 +51,16 @@ class CustomUserSerializer(serializers.ModelSerializer):
                 lang = ClientIP.objects.get(id=id).lang
             except ClientIP.DoesNotExist:
                 raise serializers.ValidationError("clientIP instance not found")
-        else:
-            lang = "en"
+       
             
-        representation = super().to_representation(instance)
+            representation = super().to_representation(instance)
 
-        representation['bio'] = TranslationMiddleware.translate_text(text=representation['bio'], target_language=lang)
+            representation['bio'] = TranslationMiddleware.translate_text(text=representation['bio'], target_language=lang)
 
-        return representation
+            return representation
+        
+        else:
+            return super().to_representation(instance)
         
 
 
