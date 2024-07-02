@@ -62,9 +62,6 @@ class DatasetSerializer(serializers.ModelSerializer):
     views = serializers.ReadOnlyField()
     files_count = serializers.ReadOnlyField()
 
-    
-
-
     class Meta:
         model = Datasets
         fields = "__all__"
@@ -78,17 +75,18 @@ class DatasetSerializer(serializers.ModelSerializer):
                 lang = ClientIP.objects.get(id=id).lang
             except ClientIP.DoesNotExist:
                 raise serializers.ValidationError("clientIP instance not found")
-        else:
-            lang = "en"
+       
             
-        representation = super().to_representation(instance)
+            representation = super().to_representation(instance)
 
-        representation['description'] = TranslationMiddleware.translate_text(text=representation['description'], target_language=lang)
-        representation['title'] = TranslationMiddleware.translate_text(text=representation['title'], target_language=lang)
-        representation['update_frequency'] = TranslationMiddleware.translate_text(text=representation['update_frequency'], target_language=lang)
-        representation['license'] = TranslationMiddleware.translate_text(text=representation['license'], target_language=lang)
+            representation['description'] = TranslationMiddleware.translate_text(text=representation['description'], target_language=lang)
+            representation['title'] = TranslationMiddleware.translate_text(text=representation['title'], target_language=lang)
+            representation['update_frequency'] = TranslationMiddleware.translate_text(text=representation['update_frequency'], target_language=lang)
+            representation['license'] = TranslationMiddleware.translate_text(text=representation['license'], target_language=lang)
 
-        return representation
+            return representation
+        else:
+            representation = super().to_representation(instance)
 
 
 
