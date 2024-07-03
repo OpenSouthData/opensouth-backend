@@ -3,6 +3,8 @@ from django.db import models
 import uuid
 from django.contrib.auth import get_user_model
 from datetime import datetime
+from django.forms import model_to_dict
+
 
 # Create your models here.
 
@@ -76,4 +78,43 @@ class APIRequest(models.Model):
 
         self.is_deleted = True
         self.save()
+
+
+
+class APIUsers(models.Model):
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_api_users")
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_deleted = models.BooleanField(default=False)
+
+
+
+    def __str__(self):
+        return self.user.email
+    
+    def de_activate(self):
+        self.is_active = False
+        self.save()
+
+    def re_activate(self):
+        self.is_active = True
+        self.save()
+
+    def delete_user(self):
+        self.is_deleted = True
+        self.save()
+    
+
+    @property
+    def token_(self):
+        token = Token.objects.filter(user=self.user, is_active=True).first()
+        if token:
+            return model_to_dict(token)
+        return None
+
+        
+
 

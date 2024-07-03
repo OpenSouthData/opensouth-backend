@@ -21,6 +21,8 @@ from rest_framework.pagination import LimitOffsetPagination
 from .email import *
 from rest_framework.response import Response
 from main.email import *
+from api_portal.models import APIRequest, APIUsers
+from api_portal.serializers import APIRequestSerializer, APIUsersSerializer
 
 
 # Create your views here.
@@ -841,3 +843,45 @@ class AdminMostPublishedOrganisation(APIView):
         data = OrganisationSerializer(organisation, many=True, context={'request': request}).data
 
         return Response(data, status=status.HTTP_200_OK)
+
+
+
+
+class AdminAPIUsers(generics.ListAPIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdmin]
+    queryset = APIUsers.objects.filter(is_deleted=False).order_by('-created_at')
+    serializer_class = APIUsersSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    search_fields = ['user__email', 'user__first_name', 'user__last_name' ]
+    pagination_class = LimitOffsetPagination
+
+
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
+
+    def list(self, request, *args, **kwargs):
+            
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = DatasetSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = DatasetSerializer(queryset, many=True)
+
+        return Response(serializer.data)
+    
+
+
+
+
+
+
+

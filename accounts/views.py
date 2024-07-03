@@ -94,7 +94,6 @@ class CustomUserViewSet(UserViewSet):
             )
             return Response(status=status.HTTP_204_NO_CONTENT)
         
-        
         else:
             raise AuthenticationFailed(detail={"message":"incorrect password"})
 

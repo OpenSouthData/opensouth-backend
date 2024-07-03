@@ -36,7 +36,7 @@ from accounts.serializers import CustomUserSerializer
 import requests
 import os
 from rest_framework.response import Response
-from api_portal.models import Token, APIRequest
+from api_portal.models import Token, APIRequest, APIUsers
 from api_portal.serializers import TokenSerializer, APIRequestSerializer
 from django.http import StreamingHttpResponse
 from rest_framework.renderers import JSONRenderer
@@ -71,19 +71,37 @@ class UserToken(APIView):
         
 
     def post(self, request):
+        if APIUsers.objects.filter(user=request.user, is_active=True).exists():
 
-        try:
-            token = Token.objects.get(user=request.user, is_deleted=False, is_active=True)
-            if token:
-                token.delete_token()
+            try:
+                token = Token.objects.get(user=request.user, is_deleted=False, is_active=True)
+                if token:
+                    token.delete_token()
 
+                    token = Token.objects.create(user=request.user)
+                    return Response(TokenSerializer(token).data, status=status.HTTP_201_CREATED)
+                    
+            except Token.DoesNotExist:
+                
                 token = Token.objects.create(user=request.user)
                 return Response(TokenSerializer(token).data, status=status.HTTP_201_CREATED)
-                
-        except Token.DoesNotExist:
-            
-            token = Token.objects.create(user=request.user)
-            return Response(TokenSerializer(token).data, status=status.HTTP_201_CREATED)
+        else:
+            return Response({"error": "You are not allowed to make this request"}, status=403)
+        
+class UserAPIAgreement(APIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        user = request.user
+
+        if APIUsers.objects.filter(user=user).exists():
+            return Response({"error": "You have already accepted the agreement"}, status=400)
+        
+        APIUsers.objects.create(user=user)
+        return Response({"message": "agreement accepted successfully"}, status=200)
 
 
 # class UserAPIRequest(generics.ListAPIView):
