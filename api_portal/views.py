@@ -59,13 +59,20 @@ class APIDatasetView(generics.ListAPIView):
     search_fields = ['title', 'category__name', 'tags__name', 'organisation__name']
 
 
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
+
     def list(self, request, *args, **kwargs):
 
         user = AuthHandler(request)
         queryset = self.filter_queryset(self.get_queryset())
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = DatasetSerializer(page, many=True)
+            serializer = DatasetSerializer(page, many=True, context=self.get_serializer_context())
             return self.get_paginated_response(serializer.data)
 
         serializer = DatasetSerializer(queryset, many=True)
