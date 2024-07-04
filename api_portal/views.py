@@ -75,7 +75,7 @@ class APIDatasetView(generics.ListAPIView):
             serializer = DatasetSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
 
-        serializer = DatasetSerializer(queryset, many=True)
+        serializer = DatasetSerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
     
 
