@@ -100,6 +100,8 @@ def AuthHandler(request):
         
         if APIUsers.objects.filter(user=token_user.user, is_active=True, is_deleted=False).exists():
 
+            get_meta(request=request, token_user=token_user, token=token, status="success", code=200)
+
             return token_user.user
         
         else:
