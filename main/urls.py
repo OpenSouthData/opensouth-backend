@@ -4,9 +4,6 @@ from . import views
 
 
 
-sse_view = UserAPIRequestSSEView()
-
-
 
 
 urlpatterns = [
