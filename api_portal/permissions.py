@@ -103,7 +103,7 @@ def AuthHandler(request):
             return token_user.user
         
         else:
-            return PermissionDenied(detail="Unauthorized access -- Your access to this API has been revoked. Please contact the administrator for more information.")
+            raise PermissionDenied(detail="Unauthorized access -- Your access to this API has been revoked. Please contact the administrator for more information.")
 
 
     else:
