@@ -33,10 +33,11 @@ class CustomUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(style={"input_type": "password"}, write_only=True, required=False)
     image_url = serializers.ReadOnlyField()
     organisations = serializers.ReadOnlyField()
+    api_ = serializers.ReadOnlyField()
     
     class Meta():
         model = User
-        fields = ['id', "first_name", "last_name", "email", "password", "bio", "is_active", "role", "groups", "user_permissions", "is_superuser", "image_url", "date_joined", "organisations", "user_stats", "meta"]
+        fields = ['id', "first_name", "last_name", "email", "password", "bio", "is_active", "role", "groups", "user_permissions", "is_superuser", "image_url", "date_joined", "organisations", "user_stats", "meta", "api_"]
 
         extra_kwargs = {
             'password': {'write_only': True}

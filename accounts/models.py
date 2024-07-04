@@ -130,6 +130,18 @@ class User(AbstractBaseUser, PermissionsMixin):
             "views": views,
             "downloads": downloads
         }
+    
+    @property
+    def api_(self):
+        from api_portal.models import APIUsers
+
+        user = APIUsers.objects.filter(user=self, is_active=True, is_deleted=False)
+        
+        if user.exists():
+            return model_to_dict(user.first())
+        
+        else:
+            return None
 
 
 
