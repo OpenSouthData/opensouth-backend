@@ -853,7 +853,7 @@ class AdminAPIUsers(generics.ListAPIView):
     permission_classes = [IsAdmin]
     queryset = APIUsers.objects.filter(is_deleted=False).order_by('-created_at')
     serializer_class = APIUsersSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filter_backends = [SearchFilter]
     search_fields = ['user__email', 'user__first_name', 'user__last_name' ]
     pagination_class = LimitOffsetPagination
 
