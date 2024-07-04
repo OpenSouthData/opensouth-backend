@@ -6,7 +6,7 @@ from rest_framework.exceptions import PermissionDenied, AuthenticationFailed
 from rest_framework import exceptions
 from django.contrib.auth import get_user_model
 import json
-from .models import Token, APIRequest
+from .models import Token, APIRequest, APIUsers
 from config.custom_middleware import SecuredHostMiddleware
 
 
@@ -96,9 +96,15 @@ def AuthHandler(request):
         try:
             token_user = Token.objects.get(token=token)
 
-            get_meta(request=request, token_user=token_user, token=token, status="success", code=200)
+            if APIUsers.objects.filter(user=token_user.user, is_active=True).exists():
 
-            return token_user.user
+
+                get_meta(request=request, token_user=token_user, token=token, status="success", code=200)
+
+
+                return token_user.user
+            else:
+                return PermissionDenied(detail="Unauthorized access -- Your access to this API has been revoked. Please contact the administrator for more information.")
         
         except Token.DoesNotExist:
             raise PermissionDenied(detail="Unauthorized access -- Incorrect or invalid auth key")
