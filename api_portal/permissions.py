@@ -95,19 +95,17 @@ def AuthHandler(request):
 
         try:
             token_user = Token.objects.get(token=token)
-
-            if APIUsers.objects.filter(user=token_user.user, is_active=True).exists():
-
-
-                get_meta(request=request, token_user=token_user, token=token, status="success", code=200)
-
-
-                return token_user.user
-            else:
-                return PermissionDenied(detail="Unauthorized access -- Your access to this API has been revoked. Please contact the administrator for more information.")
-        
         except Token.DoesNotExist:
             raise PermissionDenied(detail="Unauthorized access -- Incorrect or invalid auth key")
+        
+        if APIUsers.objects.filter(user=token_user.user, is_active=True, is_deleted=False).exists():
+
+            return token_user.user
+        
+        else:
+            return PermissionDenied(detail="Unauthorized access -- Your access to this API has been revoked. Please contact the administrator for more information.")
+
+
     else:
         raise PermissionDenied(detail="Unauthorized access -- Auth key not provided")
 
