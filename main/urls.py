@@ -4,9 +4,6 @@ from . import views
 
 
 
-sse_view = UserAPIRequestSSEView()
-
-
 
 
 urlpatterns = [
@@ -28,7 +25,7 @@ urlpatterns = [
     path('user/datasets/', UserDataset.as_view(), name="user_datasets"),
     path('user/token/manager/', UserToken.as_view(), name="user_token_manager"),
     path('user/api/agreement/', UserAPIAgreement.as_view(), name="user_api_agreement"),
-    path('user/api/request/', UserAPIRequestSSEView.as_view(), name="user_api_request"),
+    path('user/api/request/', UserAPIRequests.as_view(), name="user_api_request"),
     path('user/dataset/pk/<uuid:pk>/files/', UserDatasetFiles.as_view(), name="user_dataset_files"),
     path('user/datasets/<uuid:pk>/', UserDatasetDetailView.as_view(), name="user_datasets"),
     path('user/organisations/', UserOrganisation.as_view(), name="user_organisations"),

@@ -121,32 +121,24 @@ class UserAPIAgreement(APIView):
 #     def get_queryset(self):
 #         return APIRequest.objects.filter(token__user=self.request.user).order_by('-created_at')
 
-class UserAPIRequestSSEView(generics.ListAPIView):
+class UserAPIRequests(generics.ListAPIView):
 
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self, request):
-        return APIRequest.objects.filter(token__user=request.user).order_by('-created_at')
+        return APIRequest.objects.filter(token__user=request.user).order_by('created_at')
 
-    def event_stream(self, request):
-        queryset = self.get_queryset(request)
-        serializer = APIRequestSerializer(queryset, many=True)
-        data = JSONRenderer().render(serializer.data)
-        
-        message = f"data: {data.decode('utf-8')}\n\n"
-
-        yield message
-
-    def sse_view(self, request):
-        response = StreamingHttpResponse(self.event_stream(request), content_type='text/event-stream')
-        response['Cache-Control'] = 'no-cache'
-        response['X-Accel-Buffering'] = 'no'  # Disable buffering for Nginx
-
-        return response
 
     def list(self, request, *args, **kwargs):
-        return self.sse_view(request)
+        queryset = self.get_queryset(request)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = APIRequestSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        
+        serializer = APIRequestSerializer(queryset, many=True)
+        return Response(serializer.data)
         
 
 class CategoryView(APIView):
