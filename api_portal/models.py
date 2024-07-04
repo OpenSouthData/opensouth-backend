@@ -114,6 +114,10 @@ class APIUsers(models.Model):
         if token:
             return model_to_dict(token)
         return None
+    
+    @property
+    def user_(self):
+        return model_to_dict(self.user, fields=['id', 'first_name', 'last_name', 'email', 'is_active', 'role', 'image_url' ])
 
         
 
