@@ -853,7 +853,7 @@ class AdminAPIUsers(generics.ListAPIView):
     permission_classes = [IsAdmin]
     queryset = APIUsers.objects.filter(is_deleted=False).order_by('-created_at')
     serializer_class = APIUsersSerializer
-    filter_backends = [SearchFilter]
+    filter_backends = [SearchFilter, DjangoFilterBackend]
     search_fields = ['user__email', 'user__first_name', 'user__last_name' ]
     pagination_class = LimitOffsetPagination
 
@@ -871,10 +871,10 @@ class AdminAPIUsers(generics.ListAPIView):
 
         page = self.paginate_queryset(queryset)
         if page is not None:
-            serializer = DatasetSerializer(page, many=True, context={'request': request})
+            serializer = APIUsersSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
 
-        serializer = DatasetSerializer(queryset, many=True, context={'request': request})
+        serializer = APIUsersSerializer(queryset, many=True, context={'request': request})
 
         return Response(serializer.data)
     
