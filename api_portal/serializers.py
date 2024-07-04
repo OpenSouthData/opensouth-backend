@@ -28,6 +28,7 @@ class APIRequestSerializer(serializers.ModelSerializer):
 class APIUsersSerializer(serializers.ModelSerializer):
 
     token_ = serializers.ReadOnlyField()
+    user_ = serializers.ReadOnlyField()
 
     class Meta:
         model = APIUsers
