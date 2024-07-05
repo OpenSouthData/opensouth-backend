@@ -411,11 +411,11 @@ class NewsView(APIView):
     @swagger_auto_schema(request_body=NewsSerializer)
     @action(detail=True, methods=['POST'])
     def post(self, request):
-        serializer = NewsSerializer(data=request.data)
+        serializer = NewsSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
 
-            data = NewsSerializer(serializer.instance).data
+            data = NewsSerializer(serializer.instance, context={'request': request}).data
 
             return Response(data, status=status.HTTP_201_CREATED)
         
@@ -535,9 +535,9 @@ def news_actions(request, pk, action):
             
             return Response({"message": "news objectt updated successfully"}, status=status.HTTP_200_OK)
         
-        if action == "unpublish":
+        elif action == "unpublish":
 
-            news.satus = "unpublished"
+            news.status = "unpublished"
             news.save()
 
             return Response({"message": "news updated successfully"}, status=status.HTTP_200_OK)
