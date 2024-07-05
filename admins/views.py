@@ -411,11 +411,11 @@ class NewsView(APIView):
     @swagger_auto_schema(request_body=NewsSerializer)
     @action(detail=True, methods=['POST'])
     def post(self, request):
-        serializer = NewsSerializer(data=request.data)
+        serializer = NewsSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
 
-            data = NewsSerializer(serializer.instance).data
+            data = NewsSerializer(serializer.instance, context={'request': request}).data
 
             return Response(data, status=status.HTTP_201_CREATED)
         
