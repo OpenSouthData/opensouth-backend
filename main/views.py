@@ -195,7 +195,7 @@ class OrganisationView(APIView):
     @action(detail=True, methods=['POST'])
     def post(self, request):
 
-        serializer = OrganisationSerializer(data=request.data)
+        serializer = OrganisationSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         name = serializer.validated_data['name']
         email = serializer.validated_data['email']
