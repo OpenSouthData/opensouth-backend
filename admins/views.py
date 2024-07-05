@@ -535,9 +535,9 @@ def news_actions(request, pk, action):
             
             return Response({"message": "news objectt updated successfully"}, status=status.HTTP_200_OK)
         
-        if action == "unpublish":
+        elif action == "unpublish":
 
-            news.satus = "unpublished"
+            news.status = "unpublished"
             news.save()
 
             return Response({"message": "news updated successfully"}, status=status.HTTP_200_OK)
