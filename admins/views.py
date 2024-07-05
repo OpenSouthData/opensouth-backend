@@ -881,6 +881,68 @@ class AdminAPIUsers(generics.ListAPIView):
 
 
 
+class AdminAPIUsersDetails(generics.RetrieveAPIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdmin]
+    serializer_class = APIUsersSerializer
+    queryset = APIUsers.objects.filter(is_deleted=False).order_by('-created_at')
+    lookup_field = 'pk'
+
+    def get_serializer_context(self):
+       
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+    
+
+
+
+
+class AdminAPIUserActions(APIView):
+
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdmin]
+    
+    def post(self, request, pk, action):
+
+        if pk is None:
+            return Response({"error": "api user id is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if action is None:
+            return Response({"error": "action is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            api_user = APIUsers.objects.get(id=pk)
+        except APIUsers.DoesNotExist:
+            return Response({"error": "api user does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        
+        if action == "block":
+
+            api_user.is_active = False
+            api_user.save()
+
+            return Response({"message": "api user blocked successfully"}, status=status.HTTP_200_OK)
+        
+        elif action == "unblock":
+
+            api_user.is_active = True
+            api_user.save()
+
+            return Response({"message": "api user unblocked successfully"}, status=status.HTTP_200_OK)
+        
+        elif action == "delete":
+
+            api_user.is_deleted = True
+            api_user.save()
+
+            return Response({"message": "api user deleted successfully"}, status=status.HTTP_200_OK)
+        
+        else:
+            return Response({"error": "invalid action"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 
 
