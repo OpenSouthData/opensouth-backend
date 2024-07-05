@@ -35,6 +35,8 @@ urlpatterns = [
     path('admin/average-download/chart/', AverageDownloadView.as_view(), name="admin_average_download_chart"),
     path('admin/most-published/organisation/', AdminMostPublishedOrganisation.as_view(), name="admin_most_published_organisation"),
     path('admin/api/users/', AdminAPIUsers.as_view(), name="admin_api_users"),
+    path('admin/api/users/<uuid:pk>/', AdminAPIUsersDetails.as_view(), name="admin_api_users_details"),
+    path('admin/api/users/pk/<uuid:pk>/actions/<str:action>/', AdminAPIUserActions.as_view(), name="admin_api_users_actions"),
 
 
 ]
