@@ -245,6 +245,22 @@ class Datasets(models.Model):
             return data
         
     @property
+    def publisher_(self):
+        if self.organisation:
+            data = model_to_dict(self.organisation, fields=["type", "name", "slug"])
+            data["type"] = "organisation"
+            data["slug"] = self.organisation.slug     
+
+            return data
+        
+        else:
+            data = model_to_dict(self.user, fields=["type", "first_name", "last_name"])
+            data["type"] = "individual"
+
+            return data
+
+        
+    @property
     def files_count(self):
         from .models import DatasetFiles
         return DatasetFiles.objects.filter(dataset=self).count()
