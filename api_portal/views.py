@@ -104,10 +104,10 @@ class APIDatasetFileView(generics.ListAPIView):
         page = self.paginate_queryset(queryset)
 
         if page is not None:
-            serializer = APIDatasetSerializer(page, many=True, context={'request': request})
+            serializer = APIDatasetFilesSerializer(page, many=True, context={'request': request})
             return self.get_paginated_response(serializer.data)
 
-        serializer = APIDatasetSerializer(queryset, many=True, context={'request': request})
+        serializer = APIDatasetFilesSerializer(queryset, many=True, context={'request': request})
 
         return Response(serializer.data)
         
