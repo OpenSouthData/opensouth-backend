@@ -60,8 +60,6 @@ class Categories(models.Model):
 
 
 
-
-
 class Organisations(models.Model):
 
     """ users is the group of users that are in the organisation
@@ -216,6 +214,10 @@ class Datasets(models.Model):
         self.name = f"{self.title} -deleted-"
         self.slug = f"{self.slug} -deleted-"
         self.save()
+
+    @property
+    def category_(self):
+        return model_to_dict(self.category, fields=["id", "name", "slug"])
 
     
     @property

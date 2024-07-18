@@ -52,7 +52,7 @@ from .permissions import AuthHandler
 
 class APIDatasetView(generics.ListAPIView):
 
-    serializer_class = DatasetSerializer
+    serializer_class = APIDatasetSerializer
     queryset = Datasets.objects.filter(is_deleted=False, status='published').order_by('-created_at')
     pagination_class = LimitOffsetPagination
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
