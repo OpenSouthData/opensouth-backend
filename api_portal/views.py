@@ -81,23 +81,39 @@ class APIDatasetView(generics.ListAPIView):
 
 
 
-class APIDatasetFileView(generics.RetrieveAPIView):
+class APIDatasetFileView(generics.ListAPIView):
 
     serializer_class = APIDatasetFilesSerializer
     queryset = DatasetFiles.objects.filter(is_deleted=False).order_by('-created_at')
     pagination_class = LimitOffsetPagination
-    lookup_field = 'pk'
-    lookup_url_kwarg = 'pk'
 
 
-    def get_object(self):
+    def list(self, request, *args, **kwargs):
 
-        user = AuthHandler(self.request)
-        queryset = self.get_queryset()
-        obj = get_object_or_404(queryset, pk=self.kwargs['pk'])
-        if not obj.is_deleted:
-            return obj
-        raise PermissionDenied()
+
+
+        user = AuthHandler(request)
+        pk = request.GET.get(pk, None)
+        if pk == None:
+            raise ValidationError("Please provide dataset id as a url param. 'pk'")
+        
+
+        queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.filter(dataset__id=pk)
+        if not queryset:
+            raise NotFound("No files found for this dataset 'pk' ")
+        
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = APIDatasetSerializer(page, many=True, context={'request': request})
+            return self.get_paginated_response(serializer.data)
+
+        serializer = APIDatasetSerializer(queryset, many=True, context={'request': request})
+
+        return Response(serializer.data)
+        
+   
             
 
 
