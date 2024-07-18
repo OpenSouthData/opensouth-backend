@@ -93,13 +93,13 @@ class APIDatasetFileView(generics.ListAPIView):
         user = AuthHandler(request)
         pk = request.GET.get('key', None)
         if pk == None:
-            return ValidationError("Please provide dataset id as a url param. 'key'")
+            raise ValidationError("Please provide dataset id as a url param. 'key'")
         
 
         queryset = self.filter_queryset(self.get_queryset())
         queryset = queryset.filter(dataset__id=pk)
         if not queryset:
-            return NotFound("No files found for this dataset 'key' ")
+            raise NotFound("No files found for this dataset 'key' ")
         
         page = self.paginate_queryset(queryset)
 
