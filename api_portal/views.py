@@ -94,10 +94,13 @@ class APIDatasetFileView(generics.ListAPIView):
         pk = request.GET.get('key', None)
         if pk == None:
             return Response({"error": "Please provide dataset id as a url param. 'key'"}, status=403)
-        
+        try:
 
-        queryset = self.filter_queryset(self.get_queryset())
-        queryset = queryset.filter(dataset__id=pk)
+            queryset = self.filter_queryset(self.get_queryset())
+            queryset = queryset.filter(dataset__id=pk)
+        except Exception as e:
+            return Response({"error": str(e)}, status=403)
+
         if not queryset:
             return Response({"error": "No files found for this dataset 'key' "}, status=404)
         
