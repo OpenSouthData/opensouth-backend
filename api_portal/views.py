@@ -79,3 +79,28 @@ class APIDatasetView(generics.ListAPIView):
         return Response(serializer.data)
     
 
+
+
+class APIDatasetFileView(generics.RetrieveAPIView):
+
+    serializer_class = APIDatasetFilesSerializer
+    queryset = DatasetFiles.objects.filter(is_deleted=False).order_by('-created_at')
+    pagination_class = LimitOffsetPagination
+    lookup_field = 'pk'
+    lookup_url_kwarg = 'pk'
+
+
+    def get_object(self):
+
+        user = AuthHandler(self.request)
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset, pk=self.kwargs['pk'])
+        if not obj.is_deleted:
+            return obj
+        raise PermissionDenied()
+            
+
+
+    
+
+
