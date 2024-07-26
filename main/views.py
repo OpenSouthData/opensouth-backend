@@ -346,7 +346,7 @@ class DatasetView(APIView):
     @action(detail=True, methods=['POST'])
     def post(self, request, cat_pk):
         
-        serializer = DatasetSerializer(data=request.data)
+        serializer = DatasetSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         data = serializer.validated_data
 
