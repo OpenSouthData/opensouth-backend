@@ -8,7 +8,8 @@ services:
     volumes:
       - .:/app
     command: >
-      sh -c "python3 ./manage.py migrate &&
+      sh -c "python3 ./manage.py makemigrations &&
+             python3 ./manage.py migrate &&
              gunicorn config.wsgi:application -b 0.0.0.0:4000"
     env_file:
       - ./.env
