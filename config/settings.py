@@ -334,19 +334,27 @@ if os.getenv("ENVIRONMENT") == "production":
     """
     The in-production settings.
     """
-    DEBUG = False
+    DEBUG = True
 
     INTERNAL_IPS = [
         '127.0.0.1'
     ]
     
     
-    DATABASES = values.DatabaseURLValue(
-        os.getenv("DATABASE_URL")
-    )
-    
-    ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(',')
-    CSRF_TRUSTED_ORIGINS = os.getenv("TRUSTED_ORIGINS").split(',')
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv("prod_db_name"),
+            'HOST': os.getenv("prod_db_host"),
+            'USER': os.getenv("prod_db_user"),
+            'PASSWORD': os.getenv("prod_db_password"),
+            'PORT': os.getenv("prod_db_port")
+
+        }
+    }
+
+
+
 
 
 
@@ -368,6 +376,8 @@ if os.getenv("ENVIRONMENT") == "development":
 
         }
     }
+
+
 
 
 
