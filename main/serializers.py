@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from public.models import ClientIP
 from config.custom_middleware import TranslationMiddleware
 from public.models import ClientIP
+from .helpers import CustomBase64FileField
 import uuid
 
 
@@ -101,7 +102,7 @@ class DatasetFileSerializer(serializers.ModelSerializer):
 
     dataset_data = serializers.ReadOnlyField()
     file_url = serializers.ReadOnlyField()
-    file = serializers.FileField(required=True)
+    file = CustomBase64FileField(required=True)
     uploaded_by = serializers.ReadOnlyField()
 
     class Meta:
