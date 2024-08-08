@@ -7,6 +7,7 @@ from config.custom_middleware import TranslationMiddleware
 from public.models import ClientIP
 from .helpers import CustomBase64FileField
 import uuid
+from .helpers import UploadBase64
 
 
 User = get_user_model()
@@ -109,6 +110,20 @@ class DatasetFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = DatasetFiles
         fields = "__all__"
+
+
+    def create(self, validatad_data):
+
+        
+      
+        UploadBase64.raw(validatad_data)
+        file = f"dataset_files/{validatad_data['file']}"
+
+        pk = DatasetFiles.objects.create(**validatad_data, file=file)
+
+        return pk
+
+
 
 
 

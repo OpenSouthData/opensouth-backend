@@ -337,9 +337,9 @@ class DatasetFiles(models.Model):
         self.save()
 
 
-    def save(self, *args, **kwargs):
-        self.sha256 = hashlib.sha256(self.file.read()).hexdigest()
-        super(DatasetFiles, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.sha256 = hashlib.sha256(self.file.read()).hexdigest()
+    #     super(DatasetFiles, self).save(*args, **kwargs)
 
     @property
     def file_url(self):
