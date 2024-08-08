@@ -102,8 +102,8 @@ class DatasetFileSerializer(serializers.ModelSerializer):
 
     dataset_data = serializers.ReadOnlyField()
     file_url = serializers.ReadOnlyField()
-    # file = CustomBase64FileField(required=True)
-    file = serializers.FileField(required=True)
+    file = CustomBase64FileField(required=True)
+    # file = serializers.FileField(required=True)
     uploaded_by = serializers.ReadOnlyField()
 
     class Meta:
