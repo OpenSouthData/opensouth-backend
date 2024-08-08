@@ -416,20 +416,25 @@ class CreateDatasetFiles(APIView):
         
         file = serializer.validated_data['file']
         
-        binary_data = base64.b64decode(file)
-        sha256 = hashlib.sha256(binary_data).hexdigest()
-
+        sha256 = hashlib.sha256(file.read()).hexdigest()
 
         if DatasetFiles.objects.filter(sha256=sha256).exists():
             return Response({"error": "file with this contents already exists"}, status=400)
         
-        serializer.validated_data['sha256'] = sha256
-        serializer.validated_data['user'] = request.user
-        serializer.validated_data['dataset'] = dataset
-        
-        pk = serializer.create(serializer.validated_data)
+        serializer.save(
+            user = request.user,
+            dataset = dataset,
 
-        return Response(DatasetFileSerializer(pk).data, status=200)
+        )
+
+
+        serialized_ = DatasetFileSerializer(serializer.instance).data
+
+        file_name = serialized_['file_url'].split('/')[-1].split('.')[0]
+        serializer.instance.file_name = file_name
+        serializer.instance.save()
+
+        return Response(DatasetFileSerializer(serializer.instance).data, status=200)
 
 
     def delete(self, request, pk):

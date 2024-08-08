@@ -5,9 +5,7 @@ from django.contrib.auth import get_user_model
 from public.models import ClientIP
 from config.custom_middleware import TranslationMiddleware
 from public.models import ClientIP
-
 import uuid
-from .helpers import UploadBase64, Base64FileField
 
 
 User = get_user_model()
@@ -103,27 +101,12 @@ class DatasetFileSerializer(serializers.ModelSerializer):
 
     dataset_data = serializers.ReadOnlyField()
     file_url = serializers.ReadOnlyField()
-    file = Base64FileField(required=True)
-    # file = serializers.FileField(required=True)
+    file = serializers.FileField(required=True)
     uploaded_by = serializers.ReadOnlyField()
 
     class Meta:
         model = DatasetFiles
         fields = "__all__"
-
-
-    def create(self, validatad_data):
-
-        
-      
-        UploadBase64.raw(validatad_data)
-        file = f"dataset_files/{validatad_data['file']}"
-
-        pk = DatasetFiles.objects.create(**validatad_data, file=file)
-
-        return pk
-
-
 
 
 
