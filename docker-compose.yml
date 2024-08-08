@@ -2,14 +2,17 @@ version: "3.7"
 
 services:
   web:
-    build: .
+    build:
+      context: .
+      args:
+        PORT: ${PORT}
     ports:
-      - 4000:4000
+      - ${PORT}:${PORT}
     volumes:
       - .:/app
     command: >
       sh -c "python3 ./manage.py makemigrations &&
              python3 ./manage.py migrate &&
-             gunicorn config.wsgi:application -b 0.0.0.0:4000"
+             gunicorn config.wsgi:application -b 0.0.0.0:${PORT}"
     env_file:
       - ./.env
