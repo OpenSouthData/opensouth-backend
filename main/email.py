@@ -15,7 +15,7 @@ def organisation_add_users(user, organisation):
 
 Dear {str(user.first_name).title()},
 
-You have been invited  into the organisation {str(organisation.name).capitalize()} to become a colaborator.
+Your request to join the {str(organisation.name)} organisation to become a colaborator as beeen approved.
 
 If you encounter any issues during the process or have any questions about our platform,
 please don't hesitate to reach out to our friendly support team at support@opensouth.io
@@ -27,14 +27,14 @@ Open South.
     html = render_to_string(
         'email/dataset.html',
         {
-            'content': f"You have been invited  into the organisation {str(organisation.name).capitalize()} to become a colaborator.",
+            'content': f"Your request to join the {str(organisation.name)} organisation to become a colaborator as been approved.",
             'name' : str(user.first_name).title()
 
         }
     )
     send_email(
         recipient=user.email,
-        subject="Open South - Organisation Invitation",
+        subject="Open South - Organisation Request Accepted",
         body=message,
         html=html
     )
@@ -46,7 +46,7 @@ def organisation_delete_users(user, organisation):
 
 Dear {str(user.first_name).capitalize()},
 
-You have been removed from the organisation {str(organisation.name).capitalize()}.
+You have been removed from the organisation {str(organisation.name)}.
 If you think this was an error or unintended, feel free to reach out to our support team.
 
 If you encounter any issues during the process or have any questions about our platform,
@@ -61,7 +61,7 @@ Open South.
         'email/dataset.html',
         {
             'content': f"""
-You have been removed from the organisation {str(organisation.name).capitalize()}.
+You have been removed from the organisation {str(organisation.name)}.
 If you think this was an error or unintended, feel free to reach out to our support team""",
             'name' : str(user.first_name).title()
 
@@ -82,7 +82,7 @@ def organisation_reject_users(user, organisation):
 
 Dear {str(user.first_name).capitalize()},
 
-Your request to join the organisation {str(organisation.name).capitalize()} as been rejected.
+Your request to join the organisation {str(organisation.name)} as been rejected.
 If you think this was an error or unintended, feel free to reach out to our support team.
 
 If you encounter any issues during the process or have any questions about our platform,
@@ -96,7 +96,7 @@ Open South.
         'email/dataset.html',
         {
             'content': f"""
-Your request to join the organisation {str(organisation.name).capitalize()} as been rejected.
+Your request to join the organisation {str(organisation.name)} as been rejected.
 If you think this was an error or unintended, feel free to reach out to our support team.""",
             'name' : str(user.first_name).title()
 
@@ -117,7 +117,7 @@ def organisation_verification_email(email, user, organization, pin):
 
 Dear {str(user.first_name).capitalize()},
 
-A new organization, {str(organization.name).capitalize()}, has been created.
+A new organization, {str(organization.name)}, has been created.
 Please use the following verification pin to verify your ownership:
 
 Verification Pin: {pin}
@@ -129,7 +129,7 @@ Open South.
     html = render_to_string(
         'email/dataset.html',
         {
-            'content': f""" A new organization, {str(organization.name).capitalize()}, has been created.
+            'content': f""" A new organization, {str(organization.name)}, has been created.
 Please use the following verification pin to verify your ownership:
 
 Verification Pin: {pin}

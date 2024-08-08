@@ -46,6 +46,9 @@ class OrganisationSerializer(serializers.ModelSerializer):
 
         representation = super().to_representation(instance)
 
+        if lang == "en":
+            return representation
+
         representation['description'] = TranslationMiddleware.translate_text(text=representation['description'], target_language=lang)
 
         return representation
@@ -78,6 +81,9 @@ class DatasetSerializer(serializers.ModelSerializer):
        
             
             representation = super().to_representation(instance)
+
+            if lang == "en":
+                return representation
 
             representation['description'] = TranslationMiddleware.translate_text(text=representation['description'], target_language=lang)
             representation['title'] = TranslationMiddleware.translate_text(text=representation['title'], target_language=lang)
@@ -127,6 +133,9 @@ class CategorySerializer(serializers.ModelSerializer):
         
             
             representation = super().to_representation(instance)
+
+            if lang == "en":
+                return representation
 
             representation['description'] = TranslationMiddleware.translate_text(text=representation['description'], target_language=lang)
             representation['name'] = TranslationMiddleware.translate_text(text=representation['name'], target_language=lang)
@@ -195,6 +204,9 @@ class NewsSerializer(serializers.ModelSerializer):
 
             
             representation = super().to_representation(instance)
+
+            if lang == "en":
+                return representation
 
             representation['body'] = TranslationMiddleware.translate_text(text=representation['body'], target_language=lang)
 

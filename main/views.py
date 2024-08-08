@@ -960,16 +960,37 @@ class UserLocationAnalysisView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
+    # def get(self, request):
+
+    #     locations = LocationAnalysis.objects.filter(dataset__user=request.user)
+
+    #     top_5 = locations.order_by('-count')[:5]
+
+    #     count = locations.exclude(pk__in=top_5).aggregate(count=Sum('count'))['count']
+
+    #     data = {
+    #         "top_locations": LocationAnalysisSerializer(locations, many=True, context={'request': request}).data,
+    #         "others": count
+    #     }
+
+    #     return Response(data, status=200)
     def get(self, request):
+        locations = LocationAnalysis.objects.filter(dataset__user=request.user).order_by('-count')
+        top_5 = []
+        seen_countries = set()
 
-        locations = LocationAnalysis.objects.filter(dataset__user=request.user)
+        for location in locations:
+            if location.country not in seen_countries:
+                top_5.append(location)
+                seen_countries.add(location.country)
+            if len(top_5) == 5:
+                break
 
-        top_5 = locations.order_by('-count')[:5]
-
-        count = locations.exclude(pk__in=top_5).aggregate(count=Sum('count'))['count']
+        remaining_locations = locations.exclude(pk__in=[loc.pk for loc in top_5])
+        count = remaining_locations.aggregate(count=Sum('count'))['count']
 
         data = {
-            "top_locations": LocationAnalysisSerializer(locations, many=True, context={'request': request}).data,
+            "top_locations": LocationAnalysisSerializer(top_5, many=True, context={'request': request}).data,
             "others": count
         }
 
@@ -991,17 +1012,27 @@ class OrganisationLocationAnalysis(APIView):
         
         locations = LocationAnalysis.objects.filter(dataset__organisation=organisation)
 
-        top_5 = locations.order_by('-count')[:5]
-        
-        count = locations.exclude(pk__in=top_5).aggregate(count=Sum('count'))['count']
-        
+        top_5 = []
+        seen_countries = set()
+
+        for location in locations:
+            if location.country not in seen_countries:
+                top_5.append(location)
+                seen_countries.add(location.country)
+            if len(top_5) == 5:
+                break
+
+        # Calculate the sum of counts for 'other' locations
+        remaining_locations = locations.exclude(pk__in=[loc.pk for loc in top_5])
+        count = remaining_locations.aggregate(count=Sum('count'))['count']
+
         data = {
-            "top_locations": LocationAnalysisSerializer(locations, many=True, context={'request': request}).data,
+            "top_locations": LocationAnalysisSerializer(top_5, many=True, context={'request': request}).data,
             "others": count
         }
 
         return Response(data, status=200)
-
+   
 
 class AdminLocationAnalysis(APIView):
 

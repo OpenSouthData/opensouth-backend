@@ -5,7 +5,8 @@ LABEL maintainer="Adeleke Oluwafemi"
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 
+    PYTHONUNBUFFERED=1 \
+    PORT=4000
 
 # install necessary packages
 RUN apt-get update && \
@@ -21,15 +22,12 @@ COPY . /app/
 
 RUN apt-get update && apt-get install -y netcat
 
-
 # install pip project dependencies
 RUN pip install --upgrade pip && \
     pip install --trusted-host pypi.python.org -r requirements.txt
 
-
-# expose ports
-EXPOSE 8000
-
+# expose the port using the environment variable
+EXPOSE ${PORT}
 
 # Use the gunicorn_config.py as the Gunicorn configuration file
 CMD ["gunicorn", "-c", "gunicorn_config.py", "config.wsgi:application"]

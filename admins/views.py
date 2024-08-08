@@ -251,11 +251,10 @@ Your dataset {str(dataset.title).capitalize()} has been published successfully.
         elif action == "unpublished":
 
             dataset.status = "unpublished"
+
             dataset.save()
             message = f"""
 Your dataset {str(dataset.title).capitalize()} has been unpublished.
-Please contact the administrator for more information.
-
 """
             dataset_actions_mail(user=dataset.user, action="unpublished", message=message)
 
@@ -373,6 +372,14 @@ The tempoary ban place on the organisation {str(organisation.name).capitalize()}
                     
             organisation.is_deleted = True
             organisation.save()
+
+            users = organisation.users.all()
+            message = f"""
+The organisation {str(organisation.name).capitalize()} has been deleted. Please contact the administrator for more information.
+
+"""
+            for user in users:
+                organisation_actions_mail(user=user, action="deleted", message=message)
 
             return Response({"message": "organisation deleted successfully"}, status=status.HTTP_200_OK)
 

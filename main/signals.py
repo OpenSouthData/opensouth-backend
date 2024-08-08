@@ -37,7 +37,12 @@ def dataset_created(sender, instance, created, **kwargs):
 
             message = f"""
 A new dataset with the DUI id: {str(instance.dui)} has been created under the {str(instance.organisation.name).capitalize()} organisation. 
-Please visit the following link to view the dataset: https://opensouth.io/dataset/{instance.pk}.
+Please visit the following link to view the dataset:
+<a
+    href=https://opensouth.io/dataset/{instance.pk}
+    >
+    https://opensouth.io/dataset/{instance.pk}
+</a>.
 
 """
             users = instance.organisation.users.all()

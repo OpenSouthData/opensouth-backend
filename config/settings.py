@@ -161,8 +161,17 @@ AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_Storage_Bucket_Name")
 # AWS_CLOUDFRONT_KEY = str(os.getenv("AWS_Cloudfront_Private_Key").encode('utf-8').strip())
 # print(AWS_CLOUDFRONT_KEY)
 
-# AWS_QUERYSTRING_EXPIRE = 180
 
+import boto3
+from botocore.client import Config
+# AWS_QUERYSTRING_EXPIRE = 180
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id=AWS_ACCESS_KEY_ID,
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+    region_name=AWS_S3_REGION_NAME,
+    config=Config(signature_version='s3v4')
+)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
