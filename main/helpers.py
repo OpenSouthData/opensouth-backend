@@ -31,6 +31,7 @@ from rest_framework import serializers
 from config import settings
 from botocore.exceptions import NoCredentialsError
 
+
 class Base64FileField(serializers.FileField):
     def to_internal_value(self, data):
         if isinstance(data, six.string_types):
@@ -42,27 +43,15 @@ class Base64FileField(serializers.FileField):
                 decoded_file = base64.b64decode(data)
             except TypeError:
                 self.fail('invalid_file')
+            except Exception as e:
+                raise ValidationError(f"error;  {e}")
 
-            # Generate a unique filename
-            file_name = str(uuid.uuid4())[:12]  # 12 characters are enough
-            file_extension = self.get_file_extension(file_name, decoded_file)
-            complete_file_name = f"{file_name}.{file_extension}"
-
-            # Upload the decoded data directly to S3
-            try:
-                settings.s3_client.put_object(
-                    Bucket=settings.AWS_STORAGE_BUCKET_NAME,
-                    Key=f"dataset_files/{complete_file_name}",
-                    Body=decoded_file,
-                    ContentType='application/octet-stream'  # Set the appropriate MIME type if known
-                )
-            except NoCredentialsError:
-                self.fail('s3_upload_failed')
-
-            # Here we return the S3 URL or key as the field value
-            return f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/dataset_files/{complete_file_name}"
+            # Return the decoded file data for further processing
+            return decoded_file
 
         self.fail('invalid_file')
+
+            
 
 
 
